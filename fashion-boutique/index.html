@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAISON D'OR — Приватный дом эксклюзивной моды</title>
+<meta name="description" content="Витрина модных домов: коллекции для мужчин, женщин и детей, каталоги, цены и размерные сетки.">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div id="app">
+
+  <header class="topbar">
+    <div class="brand-mark" id="logoHome">MAISON D'<span>OR</span></div>
+    <nav class="top-crumbs" id="crumbs"></nav>
+    <div class="top-actions">
+      <button class="icon-btn" id="cartBtn">
+        Сумка <span class="bag-count" id="bagCount">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main id="view"></main>
+
+  <footer class="site-footer">
+    <div class="fmark">MAISON D'OR</div>
+    <div>Учебный демо-проект витрины модных домов. Не является официальным магазином и не аффилирован с указанными брендами.</div>
+    <div>© 2026 · Цены и наличие приведены в ознакомительных целях</div>
+  </footer>
+
+</div>
+
+<div class="overlay" id="modalOverlay"></div>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="cartDrawer">
+  <div class="drawer-head">
+    <h3 class="u-serif">Ваша сумка</h3>
+    <button class="modal-close" id="drawerClose">×</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<div class="toast" id="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
