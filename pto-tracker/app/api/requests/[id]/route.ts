@@ -14,7 +14,7 @@ export async function PATCH(
     data: { user },
   } = await supabase.auth.getUser();
   if (!user?.email) {
-    return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const admin = createAdminClient();
@@ -25,13 +25,13 @@ export async function PATCH(
     .eq("archived", false)
     .maybeSingle();
   if (!owner || owner.role !== "owner") {
-    return NextResponse.json({ error: "Недостаточно прав" }, { status: 403 });
+    return NextResponse.json({ error: "Not authorized" }, { status: 403 });
   }
 
   const body = await request.json();
   const status = body.status === "approved" ? "approved" : body.status === "rejected" ? "rejected" : null;
   if (!status) {
-    return NextResponse.json({ error: "Некорректный статус" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
   const { data: existing } = await admin
@@ -41,10 +41,10 @@ export async function PATCH(
     .maybeSingle();
 
   if (!existing || existing.users.company_id !== owner.company_id) {
-    return NextResponse.json({ error: "Заявка не найдена" }, { status: 404 });
+    return NextResponse.json({ error: "Request not found" }, { status: 404 });
   }
   if (existing.status !== "pending") {
-    return NextResponse.json({ error: "Заявка уже обработана" }, { status: 409 });
+    return NextResponse.json({ error: "Request has already been decided" }, { status: 409 });
   }
 
   const { data: updated, error: updateError } = await admin
@@ -54,7 +54,7 @@ export async function PATCH(
     .select()
     .single();
   if (updateError || !updated) {
-    return NextResponse.json({ error: updateError?.message ?? "Не удалось обновить заявку" }, { status: 500 });
+    return NextResponse.json({ error: updateError?.message ?? "Couldn't update the request" }, { status: 500 });
   }
 
   const employee = existing.users;

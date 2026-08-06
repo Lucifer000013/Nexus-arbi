@@ -75,7 +75,7 @@ export function OnboardingForm() {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Не удалось сохранить настройки");
+        setError(data.error ?? "Couldn't save settings");
         return;
       }
       router.push("/dashboard");
@@ -86,36 +86,36 @@ export function OnboardingForm() {
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-8">
       <section className="flex flex-col gap-4">
-        <h2 className="text-sm font-medium text-slate-500">Компания</h2>
+        <h2 className="text-sm font-medium text-slate-500">Company</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-1 text-sm">
-            Название компании
+            Company name
             <input
               required
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
               className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
-              placeholder="ООО «Ромашка»"
+              placeholder="Acme Inc."
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Ваше имя
+            Your name
             <input
               required
               value={ownerName}
               onChange={(e) => setOwnerName(e.target.value)}
               className="rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-slate-500"
-              placeholder="Иван Иванов"
+              placeholder="Jane Doe"
             />
           </label>
         </div>
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-sm font-medium text-slate-500">Дни по умолчанию (в год)</h2>
+        <h2 className="text-sm font-medium text-slate-500">Default days per year</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="flex flex-col gap-1 text-sm">
-            Дней отпуска
+            Vacation days
             <input
               type="number"
               min={0}
@@ -126,7 +126,7 @@ export function OnboardingForm() {
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Дней больничного
+            Sick days
             <input
               type="number"
               min={0}
@@ -140,7 +140,7 @@ export function OnboardingForm() {
       </section>
 
       <section className="flex flex-col gap-4">
-        <h2 className="text-sm font-medium text-slate-500">Сотрудники (необязательно)</h2>
+        <h2 className="text-sm font-medium text-slate-500">Employees (optional)</h2>
 
         <div className="flex flex-col gap-2">
           {employees.map((row, index) => (
@@ -148,7 +148,7 @@ export function OnboardingForm() {
               <input
                 value={row.name}
                 onChange={(e) => updateEmployee(index, "name", e.target.value)}
-                placeholder="Имя"
+                placeholder="Name"
                 className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
               />
               <input
@@ -172,19 +172,19 @@ export function OnboardingForm() {
             onClick={addRow}
             className="self-start text-sm font-medium text-slate-700 underline underline-offset-2"
           >
-            + Добавить строку
+            + Add row
           </button>
         </div>
 
         <div className="flex flex-col gap-2 rounded-lg border border-dashed border-slate-300 p-3">
           <p className="text-xs text-slate-500">
-            Или вставьте список построчно: <code>Имя, email</code>
+            Or paste a list, one per line: <code>Name, email</code>
           </p>
           <textarea
             value={bulkText}
             onChange={(e) => setBulkText(e.target.value)}
             rows={3}
-            placeholder={"Анна Смирнова, anna@company.com\nПётр Петров, petr@company.com"}
+            placeholder={"Anna Smith, anna@company.com\nPeter Jones, peter@company.com"}
             className="rounded-lg border border-slate-300 px-3 py-2 text-sm outline-none focus:border-slate-500"
           />
           <button
@@ -192,7 +192,7 @@ export function OnboardingForm() {
             onClick={applyBulkText}
             className="self-start rounded-lg bg-slate-100 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-200"
           >
-            Добавить из списка
+            Add from list
           </button>
         </div>
       </section>
@@ -204,7 +204,7 @@ export function OnboardingForm() {
         disabled={pending}
         className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60"
       >
-        {pending ? "Сохраняем..." : "Создать компанию"}
+        {pending ? "Saving..." : "Create company"}
       </button>
     </form>
   );

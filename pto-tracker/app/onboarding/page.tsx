@@ -12,13 +12,13 @@ export default async function OnboardingPage() {
     <main className="mx-auto flex min-h-screen max-w-2xl flex-col gap-8 px-6 py-16">
       <div>
         <span className="rounded-full bg-slate-900 px-3 py-1 text-xs font-medium text-white">
-          Шаг 1 из 1
+          Step 1 of 1
         </span>
         <h1 className="mt-4 text-2xl font-semibold text-slate-900">
-          Настройте компанию
+          Set up your company
         </h1>
         <p className="mt-1 text-slate-600">
-          Вы войдёте как владелец ({current.email}). Дальше сможете добавить сотрудников.
+          You&apos;ll sign in as the owner ({current.email}). You can add employees next.
         </p>
       </div>
       <OnboardingForm />

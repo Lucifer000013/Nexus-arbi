@@ -1,7 +1,7 @@
 "use client";
 
 import { DayPicker } from "react-day-picker";
-import { ru } from "react-day-picker/locale";
+import { enUS } from "react-day-picker/locale";
 import "react-day-picker/style.css";
 import type { LeaveRequest } from "@/lib/types";
 
@@ -22,7 +22,7 @@ export function MiniCalendar({ requests }: { requests: LeaveRequest[] }) {
 
   return (
     <DayPicker
-      locale={ru}
+      locale={enUS}
       showOutsideDays
       modifiers={{ approved, pending }}
       modifiersClassNames={{

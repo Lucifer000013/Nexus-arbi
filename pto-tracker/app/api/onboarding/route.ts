@@ -14,7 +14,7 @@ export async function POST(request: Request) {
   } = await supabase.auth.getUser();
 
   if (!user || !user.email) {
-    return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const body = await request.json();
@@ -32,10 +32,10 @@ export async function POST(request: Request) {
     : [];
 
   if (!companyName || !ownerName) {
-    return NextResponse.json({ error: "Заполните название компании и ваше имя" }, { status: 400 });
+    return NextResponse.json({ error: "Please fill in the company name and your name" }, { status: 400 });
   }
   if (!Number.isFinite(defaultPtoDays) || defaultPtoDays < 0 || !Number.isFinite(defaultSickDays) || defaultSickDays < 0) {
-    return NextResponse.json({ error: "Некорректные значения дней" }, { status: 400 });
+    return NextResponse.json({ error: "Invalid day values" }, { status: 400 });
   }
 
   const admin = createAdminClient();
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
     .eq("email", user.email)
     .maybeSingle();
   if (existingProfile) {
-    return NextResponse.json({ error: "Онбординг уже завершён" }, { status: 409 });
+    return NextResponse.json({ error: "Onboarding already completed" }, { status: 409 });
   }
 
   const { data: company, error: companyError } = await admin
@@ -55,7 +55,7 @@ export async function POST(request: Request) {
     .select()
     .single();
   if (companyError || !company) {
-    return NextResponse.json({ error: companyError?.message ?? "Не удалось создать компанию" }, { status: 500 });
+    return NextResponse.json({ error: companyError?.message ?? "Couldn't create the company" }, { status: 500 });
   }
 
   const { error: settingsError } = await admin.from("company_settings").insert({

@@ -1,9 +1,9 @@
 import type { RequestStatus } from "@/lib/types";
 
 const labels: Record<RequestStatus, string> = {
-  pending: "Ожидает",
-  approved: "Одобрено",
-  rejected: "Отклонено",
+  pending: "Pending",
+  approved: "Approved",
+  rejected: "Rejected",
 };
 
 const styles: Record<RequestStatus, string> = {

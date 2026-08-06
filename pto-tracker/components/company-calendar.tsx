@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import { DayPicker } from "react-day-picker";
-import { ru } from "react-day-picker/locale";
+import { enUS } from "react-day-picker/locale";
 import "react-day-picker/style.css";
 import type { AppUser, LeaveRequest } from "@/lib/types";
 
@@ -39,7 +39,7 @@ export function CompanyCalendar({ requests }: { requests: ApprovedRequest[] }) {
   return (
     <div className="flex flex-col gap-4 lg:flex-row">
       <DayPicker
-        locale={ru}
+        locale={enUS}
         showOutsideDays
         modifiers={{ single, overlap }}
         modifiersClassNames={{
@@ -50,20 +50,20 @@ export function CompanyCalendar({ requests }: { requests: ApprovedRequest[] }) {
       />
       <div className="flex flex-1 flex-col gap-2 text-sm">
         <div className="flex items-center gap-2 text-slate-600">
-          <span className="h-3 w-3 rounded bg-sky-100" /> Один сотрудник в отпуске
+          <span className="h-3 w-3 rounded bg-sky-100" /> One employee out
         </div>
         <div className="flex items-center gap-2 text-slate-600">
-          <span className="h-3 w-3 rounded bg-rose-100" /> Пересечение нескольких сотрудников
+          <span className="h-3 w-3 rounded bg-rose-100" /> Overlap between employees
         </div>
         {requests.length === 0 && (
-          <p className="mt-2 text-slate-400">Пока нет одобренных отпусков/больничных.</p>
+          <p className="mt-2 text-slate-400">No approved leave yet.</p>
         )}
         <ul className="mt-2 flex flex-col gap-1">
           {requests.map((r) => (
             <li key={r.id} className="text-slate-600">
               <span className="font-medium text-slate-800">{r.employee.name}</span>{" "}
               {r.start_date} — {r.end_date}
-              {r.type === "sick" ? " (больничный)" : " (отпуск)"}
+              {r.type === "sick" ? " (sick leave)" : " (vacation)"}
             </li>
           ))}
         </ul>

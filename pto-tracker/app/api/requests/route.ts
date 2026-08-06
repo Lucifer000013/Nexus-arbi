@@ -11,7 +11,7 @@ export async function POST(request: Request) {
     data: { user },
   } = await supabase.auth.getUser();
   if (!user?.email) {
-    return NextResponse.json({ error: "Не авторизован" }, { status: 401 });
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
   const admin = createAdminClient();
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     .eq("archived", false)
     .maybeSingle();
   if (!profile) {
-    return NextResponse.json({ error: "Профиль не найден" }, { status: 403 });
+    return NextResponse.json({ error: "Profile not found" }, { status: 403 });
   }
 
   const body = await request.json();
@@ -34,7 +34,7 @@ export async function POST(request: Request) {
   const daysCount = countBusinessDays(startDate, endDate);
   if (daysCount <= 0) {
     return NextResponse.json(
-      { error: "Укажите корректный диапазон рабочих дней" },
+      { error: "Please select a valid range of business days" },
       { status: 400 }
     );
   }
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     .single();
 
   if (error || !created) {
-    return NextResponse.json({ error: error?.message ?? "Не удалось создать заявку" }, { status: 500 });
+    return NextResponse.json({ error: error?.message ?? "Couldn't create the request" }, { status: 500 });
   }
 
   const { data: owner } = await admin

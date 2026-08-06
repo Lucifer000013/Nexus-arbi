@@ -21,7 +21,7 @@ export function AddEmployeeModal({ onClose }: { onClose: () => void }) {
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Не удалось добавить сотрудника");
+        setError(data.error ?? "Couldn't add the employee");
         return;
       }
       onClose();
@@ -32,10 +32,10 @@ export function AddEmployeeModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
       <div className="w-full max-w-sm rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-semibold text-slate-900">Добавить сотрудника</h2>
+        <h2 className="text-lg font-semibold text-slate-900">Add employee</h2>
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
           <label className="flex flex-col gap-1 text-sm">
-            Имя
+            Name
             <input
               required
               value={name}
@@ -60,14 +60,14 @@ export function AddEmployeeModal({ onClose }: { onClose: () => void }) {
               onClick={onClose}
               className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
             >
-              Отмена
+              Cancel
             </button>
             <button
               type="submit"
               disabled={pending}
               className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
             >
-              {pending ? "Добавляем..." : "Добавить"}
+              {pending ? "Adding..." : "Add"}
             </button>
           </div>
         </form>

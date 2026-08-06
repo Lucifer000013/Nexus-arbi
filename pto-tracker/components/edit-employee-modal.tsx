@@ -31,7 +31,7 @@ export function EditEmployeeModal({
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Не удалось сохранить");
+        setError(data.error ?? "Couldn't save");
         return;
       }
       onClose();
@@ -46,7 +46,7 @@ export function EditEmployeeModal({
         <p className="text-sm text-slate-500">{employee.email}</p>
         <form onSubmit={handleSubmit} className="mt-4 flex flex-col gap-4">
           <label className="flex flex-col gap-1 text-sm">
-            Баланс отпуска (дней)
+            Vacation balance (days)
             <input
               type="number"
               value={ptoBalance}
@@ -55,7 +55,7 @@ export function EditEmployeeModal({
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Баланс больничного (дней)
+            Sick leave balance (days)
             <input
               type="number"
               value={sickBalance}
@@ -70,14 +70,14 @@ export function EditEmployeeModal({
               onClick={onClose}
               className="rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-50"
             >
-              Отмена
+              Cancel
             </button>
             <button
               type="submit"
               disabled={pending}
               className="rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
             >
-              {pending ? "Сохраняем..." : "Сохранить"}
+              {pending ? "Saving..." : "Save"}
             </button>
           </div>
         </form>

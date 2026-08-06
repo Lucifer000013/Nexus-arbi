@@ -28,7 +28,7 @@ export function EmployeeManagementList({ employees }: { employees: AppUser[] }) 
               {employee.name}
               {employee.role === "owner" && (
                 <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                  владелец
+                  owner
                 </span>
               )}
             </p>
@@ -40,7 +40,7 @@ export function EmployeeManagementList({ employees }: { employees: AppUser[] }) 
               disabled={isPending}
               className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-600 hover:bg-slate-50 disabled:opacity-60"
             >
-              {employee.archived ? "Восстановить" : "Архивировать"}
+              {employee.archived ? "Restore" : "Archive"}
             </button>
           )}
         </li>

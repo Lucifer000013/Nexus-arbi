@@ -27,7 +27,7 @@ export function CompanyDefaultsForm({ settings }: { settings: CompanySettings })
       });
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error ?? "Не удалось сохранить");
+        setError(data.error ?? "Couldn't save");
         return;
       }
       setSaved(true);
@@ -39,7 +39,7 @@ export function CompanyDefaultsForm({ settings }: { settings: CompanySettings })
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="flex flex-col gap-1 text-sm">
-          Дней отпуска в год
+          Vacation days per year
           <input
             type="number"
             min={0}
@@ -49,7 +49,7 @@ export function CompanyDefaultsForm({ settings }: { settings: CompanySettings })
           />
         </label>
         <label className="flex flex-col gap-1 text-sm">
-          Дней больничного в год
+          Sick days per year
           <input
             type="number"
             min={0}
@@ -66,12 +66,12 @@ export function CompanyDefaultsForm({ settings }: { settings: CompanySettings })
           disabled={pending}
           className="self-start rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-60"
         >
-          {pending ? "Сохраняем..." : "Сохранить"}
+          {pending ? "Saving..." : "Save"}
         </button>
-        {saved && <span className="text-sm text-emerald-600">Сохранено</span>}
+        {saved && <span className="text-sm text-emerald-600">Saved</span>}
       </div>
       <p className="text-xs text-slate-400">
-        Изменения применяются только к новым сотрудникам, добавленным после сохранения.
+        Changes apply only to employees added after saving.
       </p>
     </form>
   );

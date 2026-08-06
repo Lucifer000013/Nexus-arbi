@@ -13,10 +13,10 @@ export function EmployeeTable({ employees }: { employees: AppUser[] }) {
         <table className="w-full text-left text-sm">
           <thead>
             <tr className="border-b border-slate-200 text-slate-500">
-              <th className="py-2 pr-4 font-medium">Имя</th>
+              <th className="py-2 pr-4 font-medium">Name</th>
               <th className="py-2 pr-4 font-medium">Email</th>
-              <th className="py-2 pr-4 font-medium">Отпуск</th>
-              <th className="py-2 pr-4 font-medium">Больничный</th>
+              <th className="py-2 pr-4 font-medium">Vacation</th>
+              <th className="py-2 pr-4 font-medium">Sick leave</th>
               <th className="py-2 pr-4 font-medium" />
             </tr>
           </thead>
@@ -27,7 +27,7 @@ export function EmployeeTable({ employees }: { employees: AppUser[] }) {
                   {employee.name}
                   {employee.role === "owner" && (
                     <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
-                      владелец
+                      owner
                     </span>
                   )}
                 </td>
@@ -39,7 +39,7 @@ export function EmployeeTable({ employees }: { employees: AppUser[] }) {
                     onClick={() => setEditing(employee)}
                     className="text-sm font-medium text-slate-600 underline underline-offset-2 hover:text-slate-900"
                   >
-                    Редактировать
+                    Edit
                   </button>
                 </td>
               </tr>

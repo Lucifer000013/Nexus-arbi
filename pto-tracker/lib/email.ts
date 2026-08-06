@@ -6,14 +6,14 @@ const from = process.env.RESEND_FROM_EMAIL ?? "PTO Tracker <notifications@exampl
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 const typeLabel: Record<LeaveRequest["type"], string> = {
-  vacation: "отпуск",
-  sick: "больничный",
+  vacation: "vacation",
+  sick: "sick leave",
 };
 
 const statusLabel: Record<LeaveRequest["status"], string> = {
-  pending: "ожидает решения",
-  approved: "одобрена",
-  rejected: "отклонена",
+  pending: "pending",
+  approved: "approved",
+  rejected: "rejected",
 };
 
 async function send(to: string, subject: string, html: string) {
@@ -35,19 +35,19 @@ export async function notifyOwnerOfNewRequest(
 ) {
   await send(
     owner.email,
-    `Новая заявка на ${typeLabel[request.type]} от ${employee.name}`,
-    `<p>${employee.name} подал(а) заявку на ${typeLabel[request.type]}:</p>
-     <p><b>${request.start_date} — ${request.end_date}</b> (${request.days_count} дн.)</p>
-     ${request.reason ? `<p>Комментарий: ${request.reason}</p>` : ""}
-     <p><a href="${siteUrl}/dashboard">Открыть заявки</a></p>`
+    `New ${typeLabel[request.type]} request from ${employee.name}`,
+    `<p>${employee.name} submitted a ${typeLabel[request.type]} request:</p>
+     <p><b>${request.start_date} — ${request.end_date}</b> (${request.days_count} day${request.days_count === 1 ? "" : "s"})</p>
+     ${request.reason ? `<p>Comment: ${request.reason}</p>` : ""}
+     <p><a href="${siteUrl}/dashboard">Open requests</a></p>`
   );
 }
 
 export async function notifyEmployeeOfDecision(employee: AppUser, request: LeaveRequest) {
   await send(
     employee.email,
-    `Ваша заявка на ${typeLabel[request.type]} ${statusLabel[request.status]}`,
-    `<p>Заявка на ${typeLabel[request.type]} (${request.start_date} — ${request.end_date}) ${statusLabel[request.status]}.</p>
-     <p><a href="${siteUrl}/dashboard">Открыть личный кабинет</a></p>`
+    `Your ${typeLabel[request.type]} request has been ${statusLabel[request.status]}`,
+    `<p>Your ${typeLabel[request.type]} request (${request.start_date} — ${request.end_date}) has been ${statusLabel[request.status]}.</p>
+     <p><a href="${siteUrl}/dashboard">Open your dashboard</a></p>`
   );
 }

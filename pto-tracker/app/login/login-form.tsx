@@ -19,14 +19,14 @@ export function LoginForm() {
             setError(null);
           } else {
             setStatus("error");
-            setError(result.error ?? "Не удалось отправить письмо");
+            setError(result.error ?? "Couldn't send the email");
           }
         });
       }}
     >
       {status === "sent" ? (
         <p className="rounded-lg bg-emerald-50 px-4 py-3 text-sm text-emerald-800">
-          Мы отправили ссылку для входа на вашу почту. Проверьте инбокс и перейдите по ссылке.
+          We sent a sign-in link to your email. Check your inbox and click the link.
         </p>
       ) : (
         <>
@@ -42,7 +42,7 @@ export function LoginForm() {
             disabled={pending}
             className="rounded-lg bg-slate-900 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-slate-700 disabled:opacity-60"
           >
-            {pending ? "Отправляем..." : "Войти по email"}
+            {pending ? "Sending..." : "Sign in with email"}
           </button>
           {error && <p className="text-sm text-red-600">{error}</p>}
         </>

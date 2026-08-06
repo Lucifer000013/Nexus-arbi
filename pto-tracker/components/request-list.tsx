@@ -2,13 +2,13 @@ import { StatusBadge } from "@/components/status-badge";
 import type { LeaveRequest } from "@/lib/types";
 
 const typeLabel: Record<LeaveRequest["type"], string> = {
-  vacation: "Отпуск",
-  sick: "Больничный",
+  vacation: "Vacation",
+  sick: "Sick leave",
 };
 
 export function RequestList({ requests }: { requests: LeaveRequest[] }) {
   if (requests.length === 0) {
-    return <p className="text-sm text-slate-400">Заявок пока нет.</p>;
+    return <p className="text-sm text-slate-400">No requests yet.</p>;
   }
 
   return (
@@ -20,7 +20,7 @@ export function RequestList({ requests }: { requests: LeaveRequest[] }) {
               {typeLabel[request.type]} · {request.start_date} — {request.end_date}
             </p>
             <p className="text-xs text-slate-500">
-              {request.days_count} раб. дн.
+              {request.days_count} business day{request.days_count === 1 ? "" : "s"}
               {request.reason ? ` · ${request.reason}` : ""}
             </p>
           </div>

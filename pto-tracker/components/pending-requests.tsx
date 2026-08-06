@@ -7,8 +7,8 @@ import type { AppUser, LeaveRequest } from "@/lib/types";
 type PendingRequest = LeaveRequest & { employee: AppUser };
 
 const typeLabel: Record<LeaveRequest["type"], string> = {
-  vacation: "Отпуск",
-  sick: "Больничный",
+  vacation: "Vacation",
+  sick: "Sick leave",
 };
 
 export function PendingRequests({ requests }: { requests: PendingRequest[] }) {
@@ -27,7 +27,7 @@ export function PendingRequests({ requests }: { requests: PendingRequest[] }) {
   }
 
   if (requests.length === 0) {
-    return <p className="text-sm text-slate-400">Нет заявок, ожидающих решения.</p>;
+    return <p className="text-sm text-slate-400">No requests awaiting a decision.</p>;
   }
 
   return (
@@ -39,7 +39,7 @@ export function PendingRequests({ requests }: { requests: PendingRequest[] }) {
               {request.employee.name} · {typeLabel[request.type]}
             </p>
             <p className="text-xs text-slate-500">
-              {request.start_date} — {request.end_date} · {request.days_count} раб. дн.
+              {request.start_date} — {request.end_date} · {request.days_count} business day{request.days_count === 1 ? "" : "s"}
               {request.reason ? ` · ${request.reason}` : ""}
             </p>
           </div>
@@ -49,14 +49,14 @@ export function PendingRequests({ requests }: { requests: PendingRequest[] }) {
               disabled={isPending}
               className="rounded-lg bg-emerald-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-emerald-500 disabled:opacity-60"
             >
-              Одобрить
+              Approve
             </button>
             <button
               onClick={() => decide(request.id, "rejected")}
               disabled={isPending}
               className="rounded-lg bg-rose-50 px-3 py-1.5 text-sm font-medium text-rose-700 hover:bg-rose-100 disabled:opacity-60"
             >
-              Отклонить
+              Reject
             </button>
           </div>
         </li>

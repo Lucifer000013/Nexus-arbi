@@ -29,17 +29,17 @@ export default async function SettingsPage() {
 
   return (
     <main className="mx-auto flex max-w-3xl flex-col gap-8 px-6 py-10">
-      <PageHeader title="Настройки компании" />
+      <PageHeader title="Company settings" />
 
       <section className="rounded-xl border border-slate-200 p-5">
         <h2 className="mb-3 text-sm font-medium text-slate-500">
-          Дни по умолчанию для новых сотрудников
+          Default days for new employees
         </h2>
         <CompanyDefaultsForm settings={settings as CompanySettings} />
       </section>
 
       <section className="rounded-xl border border-slate-200 p-5">
-        <h2 className="mb-3 text-sm font-medium text-slate-500">Сотрудники</h2>
+        <h2 className="mb-3 text-sm font-medium text-slate-500">Employees</h2>
         <EmployeeManagementList employees={(employees ?? []) as AppUser[]} />
       </section>
     </main>

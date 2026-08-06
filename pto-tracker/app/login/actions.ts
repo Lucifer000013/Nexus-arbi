@@ -10,7 +10,7 @@ export interface SendMagicLinkResult {
 export async function sendMagicLink(formData: FormData): Promise<SendMagicLinkResult> {
   const email = String(formData.get("email") ?? "").trim().toLowerCase();
   if (!email || !email.includes("@")) {
-    return { ok: false, error: "Введите корректный email" };
+    return { ok: false, error: "Enter a valid email address" };
   }
 
   const supabase = await createClient();

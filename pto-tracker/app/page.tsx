@@ -21,17 +21,18 @@ export default async function LandingPage({
           PTO Tracker
         </span>
         <h1 className="text-3xl font-semibold text-slate-900 sm:text-4xl">
-          Учёт отпусков и больничных для малых команд
+          Vacation and sick leave tracking for small teams
         </h1>
         <p className="text-balance text-slate-600">
-          Сотрудники подают заявки в пару кликов, вы одобряете их из одного экрана,
-          а баланс дней считается автоматически. Вход без паролей — по ссылке на почту.
+          Employees submit requests in a couple of clicks, you approve them from a single
+          screen, and day balances update automatically. No passwords — just a magic link
+          sent to your email.
         </p>
       </div>
 
       {error === "auth" && (
         <p className="text-sm text-red-600">
-          Не удалось войти по ссылке. Попробуйте отправить письмо ещё раз.
+          We couldn&apos;t sign you in with that link. Please try sending the email again.
         </p>
       )}
 
