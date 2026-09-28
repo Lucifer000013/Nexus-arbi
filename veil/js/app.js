@@ -250,13 +250,13 @@ function renderMsgs(scroll) {
 function sendMsg(c, data) {
   const m = { id: uid(), from: 'me', ts: Date.now(), ...data };
   if (c.type === 'secret' && c.ttl) m.expiresAt = Date.now() + c.ttl * 1000;
-  c.msgs.push(m); save(); renderMsgs(); renderChats(); simulateReply(c);
+  c.msgs.push(m); save(); renderMsgs(); renderChats(); simulateReply(c, m);
 }
 function sendText() {
   const inp = $('#msgin'), t = inp.value.trim(); if (!t) return;
   inp.value = ''; sendMsg(chatById(curChat), { text: t });
 }
-function simulateReply(c) { Transport.send(c); }
+function simulateReply(c, m) { Transport.send(c, m); }
 function armTimer(m, c) { if (c.type === 'secret' && m.ttl && !m.expiresAt) m.expiresAt = Date.now() + m.ttl * 1000; }
 async function shrink(file, max = 900, q = .8) {
   const url = URL.createObjectURL(file);
@@ -302,6 +302,7 @@ function ttlSheet() {
 }
 function destroyChat(id, quiet) {
   const c = chatById(id); if (!c) return;
+  if (!quiet || c.type === 'secret') Transport.deleteChatForAll(c);
   const fin = () => {
     S.chats = S.chats.filter(x => x.id !== id); save();
     if (curChat === id) { curChat = null; $('#chatpage').classList.remove('open'); }
@@ -339,12 +340,15 @@ function newChatSheet() {
     <button class="btn" data-act="startchat">Начать чат</button>
     <button class="btn ghostb" data-act="newgroup">${ic('users', 20)} Создать группу</button>`);
 }
-function startChat() {
+async function startChat() {
   const un = ($('#nun').value.trim().replace(/^@/, '').replace(/[^\w.]/g, '')).toLowerCase();
   if (!un) { toast('Введите username'); return; }
   const secret = $('#secrow .sw')?.classList.contains('on'), type = secret ? 'secret' : 'direct';
+  let peerId = null;
+  if (Transport.enabled) { peerId = await Transport.findUser(un); if (!peerId) { toast('Пользователь @' + un + ' не найден'); return; } }
   let c = S.chats.find(x => x.with === un && x.type === type);
-  if (!c) { c = { id: uid(), type, with: un, name: '@' + un, h: [...un].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 360, unread: 0, ttl: secret ? 30 : 0, autoDestroy: false, msgs: [] }; S.chats.push(c); save(); }
+  if (c && peerId) c.peerId = peerId;
+  if (!c) { c = { id: uid(), type, with: un, name: '@' + un, h: [...un].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 360, unread: 0, ttl: secret ? 30 : 0, autoDestroy: false, msgs: [], peerId }; S.chats.push(c); save(); }
   closeSheet(); openChat(c.id);
 }
 
@@ -566,7 +570,9 @@ const ACT = {
   join: el => joinGroup(el.dataset.id, false),
   pay: el => { el.innerHTML = 'Обработка…'; setTimeout(() => joinGroup(el.dataset.id, true), 900); },
   editprofile: () => editProfileSheet(),
-  saveprofile: () => { S.me.name = $('#pn').value.trim(); S.me.username = $('#pu').value.trim().replace(/[^\w.]/g, '').toLowerCase(); S.me.bio = $('#pb').value.trim(); save(); closeSheet(); renderProfile(); updatePins(); },
+  saveprofile: async () => { S.me.name = $('#pn').value.trim(); S.me.username = $('#pu').value.trim().replace(/[^\w.]/g, '').toLowerCase(); S.me.bio = $('#pb').value.trim();
+    if (Transport.enabled && S.me.username) { const r = await Transport.setUsername(S.me.username); if (!r.ok) { toast(r.error); return; } }
+    save(); closeSheet(); renderProfile(); updatePins(); },
   pickavatar: () => $('#avfile').click(),
   addmedia: () => { $('#file').dataset.for = 'profile'; $('#file').click(); },
   mtab: el => { mediaTab = el.dataset.v; renderProfile(); },
@@ -644,6 +650,17 @@ setInterval(() => {
   if (changed) renderChats();
 }, 500);
 // видимость по выбору аудитории
+
+/* входящие с сервера */
+Transport.onMessage = ({ from, peerId, text, ttl, ts }) => {
+  let c = S.chats.find(x => x.with === from && x.type !== 'group' && (ttl ? x.type === 'secret' : x.type === 'direct'));
+  if (!c) { c = { id: uid(), type: ttl ? 'secret' : 'direct', with: from, name: '@' + from, h: [...from].reduce((a, ch) => a + ch.charCodeAt(0), 0) % 360, unread: 0, ttl: ttl || 0, autoDestroy: false, msgs: [], peerId }; S.chats.push(c); }
+  c.peerId = peerId; const m = { id: uid(), from: 'them', text, ts }; if (ttl) m.ttl = ttl;
+  c.msgs.push(m);
+  if (curChat === c.id) { armTimer(m, c); renderMsgs(); } else c.unread = (c.unread || 0) + 1;
+  save(); renderChats();
+};
+Transport.onDestroy = from => { const c = S.chats.find(x => x.with === from); if (c) { destroyChat(c.id, true); toast('🔥 @' + from + ' уничтожил чат'); } };
 
 /* ───────── старт ───────── */
 load(); shell(); applyTheme(); renderChatsView(); renderTabbar();

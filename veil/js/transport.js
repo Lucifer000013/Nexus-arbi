@@ -1,9 +1,12 @@
-/* Слой связи с сервером. Сейчас — заглушка: сообщения хранятся только на устройстве.
-   Для запуска замените реализации на реальные (WebSocket/HTTP) — остальной код менять не нужно.
-   См. LAUNCH.md. */
+/* Слой связи с сервером. Сейчас — заглушка: всё хранится только на устройстве.
+   Когда выберете бэкенд, реализуйте эти методы; остальной код менять не нужно (см. LAUNCH.md).
+   Входящие сообщения передавайте в onMessage({from, peerId, text, ttl, ts}), удаление чата — в onDestroy(from). */
 window.VeilTransport = {
-  send(chat, msg) { /* TODO: зашифровать (E2E) и отправить на сервер; получатель шлёт входящие через deliver() */ },
-  purchase(kind, id) { /* TODO: платёжный провайдер; вернуть Promise<boolean> */ return Promise.resolve(false); },
-  publishLocation(pos, audience) { /* TODO: отправлять геопозицию только выбранной аудитории */ },
-  deleteChatForAll(chatId) { /* TODO: команда серверу удалить чат у обоих участников */ }
+  enabled: false, onMessage: null, onDestroy: null,
+  async setUsername() { return { ok: true }; },
+  async findUser() { return null; },
+  send(chat, msg) { },
+  deleteChatForAll(chat) { },
+  purchase(kind, id) { return Promise.resolve(false); },
+  publishLocation(pos, audience) { }
 };

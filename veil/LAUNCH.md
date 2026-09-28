@@ -14,3 +14,4 @@
 7. **Платные группы и Premium**: платёжный провайдер (Stripe / App Store / Google Play), чеки, отмена подписки.
 8. **Юридическое**: политика конфиденциальности, ToS, возрастные ограничения, требования сторов (UGC-модерация, жалобы, блокировки).
 9. **Упаковка**: PWA (manifest + service worker) → Capacitor/Swift/Kotlin для App Store и Google Play.
+

@@ -185,7 +185,7 @@ input,textarea{font:inherit;color:inherit;background:none;border:0;outline:0}
 .leaflet-container{background:#0b0d12;font-family:var(--font)}
 .leaflet-marker-icon{transition:transform 2.6s linear}
 .leaflet-zoom-anim .leaflet-marker-icon{transition:none}
-.fmap{overflow:hidden;cursor:grab;touch-action:none;
+#mapbox.fmap{overflow:hidden;cursor:grab;touch-action:none;
   background-color:#0c0f15;
   background-image:
     linear-gradient(rgba(255,255,255,.055) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.055) 2px,transparent 2px),
