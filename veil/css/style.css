@@ -266,3 +266,4 @@ input,textarea{font:inherit;color:inherit;background:none;border:0;outline:0}
 .them .bub{background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(255,255,255,.16))}
 .me .bub{background:linear-gradient(160deg,rgba(40,40,62,.5),rgba(30,30,50,.36))}
 .bub .meta{opacity:.65}
+a.cell{color:inherit;text-decoration:none}

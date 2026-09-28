@@ -57,6 +57,7 @@ const seed = () => ({
   theme: { ...DEFAULT_THEME },
   map: { ghost: false, audience: 'all', selected: [], precise: true },
   contacts: [],
+  blocked: [],
   chats: []
 });
 
@@ -64,6 +65,7 @@ let S;
 function load() {
   try { S = JSON.parse(localStorage.getItem(KEY)); } catch (e) { S = null; }
   if (!S || !S.me) S = seed();
+  S.blocked = S.blocked || [];
   // видео живут только в сессии
   S.chats.forEach(c => c.msgs.forEach(m => { if (m.media && m.media.type === 'video' && !/^blob:/.test(m.media.url)) delete m.media; else if (m.media && m.media.type === 'video') { delete m.media; m.text = m.text || '🎞 Видео (только в сессии)'; } }));
 }
@@ -178,7 +180,7 @@ function renderStrip() {
 function renderChats() {
   const box = $('#chatlist'); if (!box) return; renderStrip();
   const q = ($('#q')?.value || '').toLowerCase();
-  const list = S.chats.filter(c => c.name.toLowerCase().includes(q)).sort((a, b) => (lastMsg(b)?.ts || 0) - (lastMsg(a)?.ts || 0));
+  const list = S.chats.filter(c => !S.blocked.includes(c.with) && c.name.toLowerCase().includes(q)).sort((a, b) => (lastMsg(b)?.ts || 0) - (lastMsg(a)?.ts || 0));
   if (!list.length) { box.innerHTML = `<div class="empty">${ic('chat', 46)}<br>Пока здесь пусто.<br>Нажмите ✎ и напишите первое сообщение.</div>`; renderTabbar(); return; }
   box.innerHTML = `<div class="list plain">` + list.map(c => {
     const m = lastMsg(c); let pv = m ? (m.media ? (m.media.type === 'video' ? '🎞 Видео' : '📷 Фото') : m.text) : 'Нет сообщений';
@@ -282,17 +284,36 @@ function chatMenu() {
         <button class="cell" data-act="tg-auto">${ic('flame', 22)}<span class="l">Уничтожить при выходе<small>Чат исчезнет сразу, как вы его закроете</small></span>${sw(c.autoDestroy)}</button>
         <button class="cell" data-act="tg-protect">${ic('shield', 22)}<span class="l">Защита экрана<small>Скрывать чат при сворачивании окна</small></span>${sw(S.protect !== false)}</button>
       </div>
-      <button class="btn dng" data-act="destroy">${ic('trash', 20)} Уничтожить чат у обоих</button>`;
+      <button class="btn dng" data-act="destroy">${ic('trash', 20)} Уничтожить чат у обоих</button>` + safetyCells();
   } else if (c.type === 'direct') {
     h = `<h2>${esc(c.name)}</h2><p class="sub">Обычный облачный чат.</p>
       <div class="grp"><button class="cell" data-act="mksecret">${ic('lock', 22)}<span class="l">Начать секретный чат<small>Шифрование, таймер, самоуничтожение</small></span>${ic('chev', 18)}</button></div>
       <button class="btn dng" data-act="delete">${ic('trash', 20)} Удалить чат</button>`;
+    h += safetyCells();
   } else {
     h = `<h2>${esc(c.name)}</h2><p class="sub">${kindPill(c.kind)} · ${c.members.length + 1} участников${c.kind === 'paid' ? ` · ${c.price} $ / ${c.period}` : ''}</p>
       ${c.owner ? `<div class="grp"><div class="cell"><span class="l">Ссылка-приглашение<small>veil.app/${c.id}</small></span></div></div>` : ''}
       <button class="btn dng" data-act="delete">${ic('trash', 20)} ${c.owner ? 'Удалить группу' : 'Покинуть группу'}</button>`;
   }
   sheet(h);
+}
+const safetyCells = () => `<div class="grp"><button class="cell" data-act="report">${ic('shield', 22)}<span class="l">Пожаловаться<small>Спам, оскорбления, незаконный контент</small></span></button>
+  <button class="cell red" data-act="block">${ic('x', 22)}<span class="l">Заблокировать пользователя<small>Чат будет скрыт, сообщения не придут</small></span></button></div>`;
+function reportSheet() {
+  const R = ['Спам', 'Оскорбления или травля', 'Насилие или угрозы', 'Материалы 18+', 'Мошенничество', 'Другое'];
+  sheet(`<h2>Пожаловаться</h2><p class="sub">Жалоба уходит модераторам. Переписка в секретных чатах не передаётся, только выбранная причина.</p>
+    <div class="grp">${R.map(r => `<button class="cell" data-act="sendreport" data-v="${esc(r)}"><span class="l">${r}</span></button>`).join('')}</div>`);
+}
+const LEGAL = window.VEIL_LEGAL || { privacy: '', terms: '' };
+function legalSheet() {
+  sheet(`<h2>О приложении</h2><div class="grp">
+    <a class="cell" ${LEGAL.privacy ? `href="${esc(LEGAL.privacy)}" target="_blank" rel="noopener"` : ''}><span class="l">Политика конфиденциальности${LEGAL.privacy ? '' : '<small>Ссылка появится перед публикацией</small>'}</span>${ic('chev', 18)}</a>
+    <a class="cell" ${LEGAL.terms ? `href="${esc(LEGAL.terms)}" target="_blank" rel="noopener"` : ''}><span class="l">Условия использования${LEGAL.terms ? '' : '<small>Ссылка появится перед публикацией</small>'}</span>${ic('chev', 18)}</a></div>
+    <p class="sub">Veil 0.1.0</p>`);
+}
+function deleteAccountSheet() {
+  sheet(`<h2>Удалить аккаунт</h2><p class="sub">Профиль, чаты, группы и медиа будут удалены без возможности восстановления. Активные подписки нужно отменить в настройках App Store.</p>
+    <button class="btn dng" data-act="confirmdelete">${ic('trash', 20)} Удалить навсегда</button><button class="btn ghostb" data-act="closesheet">Отмена</button>`);
 }
 function ttlSheet() {
   const c = chatById(curChat); if (!c) return;
@@ -427,7 +448,8 @@ function renderProfile() {
       <div class="grp glass" style="margin-top:0">
         <button class="cell" data-act="appearance">${ic('palette', 22).replace('class="ic"', 'class="ic tint"')}<span class="l">Оформление<small>${S.premium ? 'Ваша тема' : 'Доступно в Premium'}</small></span>${S.premium ? '' : ic('crown', 18).replace('class="ic"', 'class="ic" style="color:var(--gold)"')}${ic('chev', 18)}</button>
         <button class="cell" data-act="mapprivacy">${ic('map', 22).replace('class="ic"', 'class="ic tint"')}<span class="l">Приватность карты<small>${mapStatus()}</small></span>${ic('chev', 18)}</button>
-        <button class="cell" data-act="reset">${ic('trash', 22)}<span class="l">Выйти и стереть данные на устройстве</span></button>
+        <button class="cell" data-act="legal">${ic('shield', 22)}<span class="l">Конфиденциальность и условия</span>${ic('chev', 18)}</button>
+        <button class="cell red" data-act="deleteaccount">${ic('trash', 22)}<span class="l">Удалить аккаунт</span></button>
       </div>
       <p class="sub" style="text-align:center;margin:18px 30px;color:var(--sub);font-size:13px;line-height:1.5">Veil — мессенджер, а не соцсеть: нет ленты, подписчиков и лайков. Вас видят только те, кого вы выбрали.</p>
     </div>`;
@@ -586,6 +608,12 @@ const ACT = {
   'th-accent': el => { if (!S.premium && el.dataset.v !== DEFAULT_THEME.accent) return premiumSheet(); S.theme.accent = el.dataset.v; save(); applyTheme(); appearanceSheet(); },
   'th-bub': el => { if (needPrem()) return; S.theme.bubble = el.dataset.v; save(); applyTheme(); appearanceSheet(); },
   'th-reset': () => { S.theme = { ...DEFAULT_THEME }; save(); applyTheme(); appearanceSheet(); },
+  report: () => reportSheet(),
+  sendreport: el => { const c = chatById(curChat); Transport.report && Transport.report(c, el.dataset.v); closeSheet(); toast('Жалоба отправлена'); },
+  block: () => { const c = chatById(curChat); if (!c) return; if (c.with && !S.blocked.includes(c.with)) S.blocked.push(c.with); save(); closeSheet(); closeChat(); toast('Пользователь заблокирован'); },
+  legal: () => legalSheet(),
+  deleteaccount: () => deleteAccountSheet(),
+  confirmdelete: async () => { try { Transport.deleteAccount && await Transport.deleteAccount(); } catch (e) { } localStorage.removeItem(KEY); location.reload(); },
   reset: () => { localStorage.removeItem(KEY); location.reload(); },
   mapprivacy: () => mapPrivacySheet(),
   ghost: () => { S.map.ghost = !S.map.ghost; save(); $('#ghostbtn')?.classList.toggle('on', S.map.ghost); $('#mapsub') && ($('#mapsub').textContent = mapStatus()); updatePins(); if ($('.sheet')) mapPrivacySheet(); toast(S.map.ghost ? '👻 Вас не видно на карте' : 'Вы снова на карте'); },

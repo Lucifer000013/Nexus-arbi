@@ -1,0 +1,17 @@
+{
+  "name": "veil-messenger",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "build": "node scripts/build.js",
+    "ios:add": "npx cap add ios",
+    "ios:sync": "npm run build && npx cap sync ios",
+    "ios:open": "npx cap open ios"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/ios": "^7.0.0",
+    "leaflet": "1.9.4"
+  },
+  "devDependencies": { "@capacitor/cli": "^7.0.0" }
+}

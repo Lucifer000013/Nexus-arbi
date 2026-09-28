@@ -8,5 +8,7 @@ window.VeilTransport = {
   send(chat, msg) { },
   deleteChatForAll(chat) { },
   purchase(kind, id) { return Promise.resolve(false); },
-  publishLocation(pos, audience) { }
+  publishLocation(pos, audience) { },
+  report(chat, reason) { /* TODO: жалоба модераторам */ },
+  deleteAccount() { /* TODO: удалить аккаунт и все данные на сервере */ return Promise.resolve(); }
 };
