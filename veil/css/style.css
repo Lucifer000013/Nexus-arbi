@@ -195,8 +195,7 @@ input,textarea{font:inherit;color:inherit;background:none;border:0;outline:0}
 #fpan .fp{position:absolute;transition:left 2.6s linear,top 2.6s linear}
 .pin{display:flex;flex-direction:column;align-items:center;width:64px;cursor:pointer;transform:translateY(-4px)}
 .pin .pav{width:48px;height:48px;border-radius:50%;border:3px solid #fff;display:grid;place-items:center;font-weight:700;font-size:19px;color:#fff;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.6);position:relative}
-.pin .pav::after{content:"";position:absolute;bottom:-9px;left:50%;width:10px;height:10px;background:#fff;transform:translateX(-50%) rotate(45deg)}
-.pin span{margin-top:5px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);white-space:nowrap}
+.pin span{margin-top:6px;font-size:11.5px;font-weight:600;padding:2px 8px;border-radius:10px;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);white-space:nowrap}
 .pin.me .pav{border-color:var(--accent)}
 .pin.me::before{content:"";position:absolute;top:-8px;width:64px;height:64px;border-radius:50%;background:var(--accent);opacity:.35;animation:pulse 2s infinite}
 @keyframes pulse{0%{transform:scale(.6);opacity:.5}100%{transform:scale(1.6);opacity:0}}
